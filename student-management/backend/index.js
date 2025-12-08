@@ -22,5 +22,19 @@ app.get('/api/students', async (req, res) => {
     }
 });
 
-// Chạy server tại cổng 5000
-app.listen(5000, () => console.log("Server chạy tại port 5000"));
+// 3. API POST: Thêm học sinh mới
+app.post('/api/students', async (req, res) => {
+    try {
+        // Tạo một học sinh mới từ dữ liệu gửi lên (req.body)
+        const newStudent = await Student.create(req.body);
+        
+        // Trả về thông tin học sinh vừa tạo (kèm mã 201 Created)
+        res.status(201).json(newStudent);
+    } catch (e) {
+        res.status(400).json({ error: e.message });
+    }
+});
+
+// Chạy server tại cổng 5001
+const PORT = 5001;
+app.listen(PORT, () => console.log("Server chạy tại port 5001"));
