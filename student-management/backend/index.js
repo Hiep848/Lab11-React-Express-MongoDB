@@ -35,6 +35,41 @@ app.post('/api/students', async (req, res) => {
     }
 });
 
+// 4. API PUT: Cập nhật thông tin học sinh
+app.put('/api/students/:id', async (req, res) => {
+    try {
+        // Tìm theo ID và cập nhật nội dung mới (req.body)
+        const updatedStu = await Student.findByIdAndUpdate(
+            req.params.id, 
+            req.body, 
+            { new: true } // Trả về dữ liệu MỚI sau khi sửa
+        );
+        
+        if (!updatedStu) {
+            return res.status(404).json({ error: "Không tìm thấy học sinh" });
+        }
+        res.json(updatedStu);
+    } catch (err) {
+        res.status(400).json({ error: err.message });
+    }
+});
+
+// 5. API DELETE: Xóa học sinh
+app.delete('/api/students/:id', async (req, res) => {
+    try {
+        const id = req.params.id;
+        const deleted = await Student.findByIdAndDelete(id);
+        
+        if (!deleted) {
+            return res.status(404).json({ error: "Không tìm thấy học sinh để xóa" });
+        }
+        
+        res.json({ message: "Đã xóa học sinh", id: deleted._id });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
 // Chạy server tại cổng 5001
 const PORT = 5001;
 app.listen(PORT, () => console.log("Server chạy tại port 5001"));
